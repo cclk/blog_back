@@ -27,7 +27,7 @@ tags:
 ```
 ssh-keygen -t rsa -C "Github的注册邮箱地址"
 ```
-一路enter过来就好，待秘钥生成完毕，会得到两个文件id_rsa和id_rsa.pub，用带格式的记事本打开id_rsa.pub，Ctrl + A复制里面的所有内容，然后进入https://github.com/settings/ssh将复制的内容粘贴到Key的输入框，随便写好Title里面的内容，点击Add SSH key按钮即可。
+一路enter过来就好，待秘钥生成完毕，会得到两个文件id_rsa和id_rsa.pub，用带格式的记事本打开id_rsa.pub，Ctrl + A复制里面的所有内容，然后进入[github-ssh](https://github.com/settings/ssh)将复制的内容粘贴到Key的输入框，随便写好Title里面的内容，点击Add SSH key按钮即可。
 
 ### 申请域名（非必须）
 为了方便用其他域名访问blog，也可以使用默认的名字，如xxx.github.io也可以访问。
@@ -117,7 +117,7 @@ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
 
 
 ### 绑定域名
-1、在source文件夹中新建一个CNAME文件（无后缀名），然后用文本编辑器打开，在首行添加你的网站域名，如xxxx.com，注意前面没有http://，也没有www，然后使用hexo g && hexo d上传部署。
+1、在source文件夹中新建一个CNAME文件（无后缀名），然后用文本编辑器打开，在首行添加你的网站域名，如xxxx.com，注意前面没有 http:// ，也没有www，然后使用hexo g && hexo d上传部署。
 2、在域名解析提供商
     （1）先添加一个CNAME，主机记录写@，后面记录值写上你的xxxx.github.io
     （2）再添加一个CNAME，主机记录写www，后面记录值也是xxxx.github.io
