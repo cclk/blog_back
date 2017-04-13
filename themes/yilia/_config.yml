@@ -7,11 +7,11 @@ menu:
 
 # SubNav
 subnav:
-  github: "#"
-  weibo: "#"
+  github: "https://github.com/cclk/"
+  #weibo: "#"
   #rss: "#"
   #zhihu: "#"
-  #qq: "#"
+  qq: "tencent://message/?uin=5870590&Site=&Menu=yes"
   #weixin: "#"
   #jianshu: "#"
   #douban: "#"
@@ -50,9 +50,9 @@ reward_type: 2
 # 打赏wording
 reward_wording: '谢谢你请我吃糖果'
 # 支付宝二维码图片地址，跟你设置头像的方式一样。比如：/assets/img/alipay.jpg
-alipay: 
+alipay: /images/alipay.png
 # 微信二维码图片地址
-weixin: 
+weixin: /images/wx.jpg
 
 # Miscellaneous
 baidu_analytics: ''
@@ -96,4 +96,4 @@ friends:
   微博: http://www.weibo.com
   起飞: http://www.qifei365.com
 
-aboutme: cclk<br><br>Just do it!<br>Thanks
+aboutme: CCLK<br>Just do it!<br>Thanks
