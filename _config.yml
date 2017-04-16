@@ -4,7 +4,7 @@
 
 # Site
 title: cclk
-subtitle: cclk的博客
+subtitle: 梦里千山
 description: 学习笔记
 author: cclk
 language: zh-CN
@@ -72,6 +72,13 @@ deploy:
   repo: https://github.com/cclk/cclk.github.io.git
   branch: master
   
+# Disqus #Disqus评论系统
+disqus_shortname: 
+
+plugins: #插件，例如生成 RSS 和站点地图的
+  hexo-generator-feed
+  hexo-generator-sitemap
+
 jsonContent:
     meta: false
     pages: false

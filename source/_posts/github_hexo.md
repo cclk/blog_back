@@ -7,6 +7,8 @@ tags:
      - blog
 ---
 
+![avatar](../assets/blog_images/hexo.jpg)
+
 ## 前言
 使用github创建的博客是属于静态网站博客，也就是把写好的文章生成HTML网页，然后上传到github网站，显示的也就是HTML网页，所以加载速度会很快。
 
