@@ -7,10 +7,12 @@ tags:
      - blog
 ---
 
-![avatar](../assets/blog_images/open-source.jpg)
+![avatar](http://ooid5jqhw.bkt.clouddn.com/open-source.jpg)
 
 ## 1、GPL
 GPL，是General Public License的缩写，是一份GNU通用公共授权非正式的中文翻译。它并非由自由软件基金会所发表，亦非使用GNU通用公共授权的软件的法定发布条款─直有GNU通用公共授权英文原文的版本始具有此等效力。
+
+<!--more-->
 
 ### 使用
 只要你用了任何该协议的库、甚至是一段代码，那么你的整个程序，不管以何种方式链接，都必须全部使用GPL协议、并遵循该协议开源。商业软件公司一般禁用GPL代码，但可以使用GPL的可执行文件和应用程序。

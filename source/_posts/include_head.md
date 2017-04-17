@@ -16,6 +16,8 @@ extern可置于变量或者函数前，以表示变量或者函数的定义在�
 
 ### 防重复定义
 
+<!--more-->
+
 ``` cpp
 #ifndef XXX
 #define XXX
