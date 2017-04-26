@@ -121,7 +121,7 @@ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
 
 
 ### 绑定域名
-1、在source文件夹中新建一个CNAME文件（无后缀名），然后用文本编辑器打开，在首行添加你的网站域名，如xxxx.com，注意前面没有 http:// ，也没有www，然后使用hexo g && hexo d上传部署。
+1、在source文件夹中新建一个CNAME文件（无后缀名），然后用文本编辑器打开，在首行添加你的网站域名，如xxxx.com，注意前面没有 http:// ，(前面可以加www，就可以用www.xxx.com访问)，然后使用hexo g && hexo d上传部署。
 2、在域名解析提供商
     （1）先添加一个CNAME，主机记录写@，后面记录值写上你的xxxx.github.io
     （2）再添加一个CNAME，主机记录写www，后面记录值也是xxxx.github.io
