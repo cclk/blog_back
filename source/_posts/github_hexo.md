@@ -1,6 +1,6 @@
 ---
 title: github+hexo搭建个人博客
-date: 2017-04-13 14:39:32
+date: 2015-04-13 14:39:32
 categories:
 reward: false
 tags:

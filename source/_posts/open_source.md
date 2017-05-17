@@ -1,6 +1,6 @@
 ---
 title: 开源协议及常见开源软件使用的协议类型
-date: 2017-04-14 09:24:32
+date: 2015-05-14 09:24:32
 categories:
 reward: false
 tags:
