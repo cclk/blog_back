@@ -204,6 +204,12 @@ ninja -C out/Default
 #release:
 gn gen out/Release "--args=is_debug=false target_cpu=\"x86\""
 ninja -C out/Release
+
+
+#生成vs工程，直接用vs2015打开，方便看源码
+gn gen out/msvc --ide="vs2015" ----no-deps
+#生成vs工程，x86 release
+gn gen out/msvc --ide="vs2015" "--args=is_debug=false target_cpu=\"x86\""
 ```
 
 ### depot_tools更新失败
