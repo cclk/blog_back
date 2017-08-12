@@ -197,19 +197,18 @@ gclient sync
 cd src
 
 #生成编译ninja项目文件：
-#debug:
-gn gen out/Default
-ninja -C out/Default
+#debug x86 MT is_component_build=true不支持:
+gn gen out/Debug "--args=is_debug=true target_cpu=\"x86\" "
+ninja -C out/Debug
 
-#release:
+#release x86 MT:
 gn gen out/Release "--args=is_debug=false target_cpu=\"x86\""
 ninja -C out/Release
 
-
-#生成vs工程，直接用vs2015打开，方便看源码
-gn gen out/msvc --ide="vs2015" ----no-deps
-#生成vs工程，x86 release
+#生成vs工程，x86 release MT
 gn gen out/msvc --ide="vs2015" "--args=is_debug=false target_cpu=\"x86\""
+
+#上述生成默认mt模式
 ```
 
 ### depot_tools更新失败
@@ -261,3 +260,6 @@ set HTTPS_PROXY=
 ### gclient sync此应用无法在你电脑上运行
 
 原因是.cipd_client.exe下载错误，删除depot_tools下缓存的.cipd_client.exe文件，重新执行gclient sync。
+
+### gn
+参考[gn](https://www.chromium.org/developers/gn-build-configuration)
