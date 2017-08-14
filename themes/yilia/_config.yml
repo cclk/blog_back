@@ -86,11 +86,11 @@ duoshuo: false
 wangyiyun: false
 
 #3、畅言
-changyan_appid: false
-changyan_conf: false
+changyan_appid: 'cytaa5kk4'
+changyan_conf: 'prod_351ae846bc6d4f933636dc4de81a940e'
 
 #4、Disqus 在hexo根目录的config里也有disqus_shortname字段，优先使用yilia的
-disqus: cclk
+disqus: false
 
 # 样式定制 - 一般不需要修改，除非有很强的定制欲望…
 style:
