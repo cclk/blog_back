@@ -9,7 +9,7 @@ tags:
 
 ![avatar](http://ooid5jqhw.bkt.clouddn.com/open-source.jpg)
 
-## 1、GPL
+## 一、GPL
 GPL，是General Public License的缩写，是一份GNU通用公共授权非正式的中文翻译。它并非由自由软件基金会所发表，亦非使用GNU通用公共授权的软件的法定发布条款─直有GNU通用公共授权英文原文的版本始具有此等效力。
 
 <!--more-->
@@ -27,7 +27,7 @@ GPL，是General Public License的缩写，是一份GNU通用公共授权非正�
 + OpenJDK
 + GCC
 
-## 2、AGPL
+## 二、AGPL
 AGPL是GPL的一个补充, 在GPL的基础上加了一些限制。原有的GPL协议，由于现在网络服务公司兴起（如：Google）产生了一定的漏洞，比如使用GPL的自由软件，但是并不发布与网络之中，则可以自由的使用GPL协议却不开源自己私有的解决方案。AGPL则增加了对此做法的约束。
 
 AGPL这个协议的制定是为了避免一个GPL/LGPL协议中的漏洞，称之为 Web Service Loophole。这主要是由于 GPL是针对传统的软件分发模式的商业模式(以微软为代表), 如果你使用的GPL的代码作为基础完成你自己的软件，如果你要分发你的软件，你的软件必须也是GPL的。随着以Google为代表的软件作为服务的互联网公司的兴起，它们的“不分发软件，为客户提供网络服务”的商业模式就不受GPL协议的约束，所以Google公司在构筑他的搜索引擎的时候可以随心所欲的拿现有的GPL协议的开源代码，无需开源他的修改成果。AGPL协议在GPL协议的基础上加上了这个约束。
@@ -41,7 +41,7 @@ GPL的约束生效的前提是“发布”软件，即使用了GPL成分的软�
 ### 商业软件
 商业软件不能使用AGPL协议的代码。
 
-## 3、LGPL
+## 三、LGPL
 LGPL是 GNU Lesser General Public License (GNU 宽通用公共许可证)的缩写形式，旧称GNU Library General Public License (GNU 库通用公共许可证),后来改称作Lesser GPL，即为更宽松的GPL，在宽松程度上与BSD,Apache,XFree86 许可证相似。GPL(General Public License)和LGPL是GNU的两种License。越来越多的自由软件(Free Software)使用GPL作为其授权声明，如果对GPL一点都不了解，有可能在使用自由软件时违反GPL的授权，恐怕会有被起诉的风险。所以任何公司在使用自由软件之前应该保证在LGPL或其它GPL变种的授权下。
 
 ### 使用
@@ -62,7 +62,7 @@ LGPL是 GNU Lesser General Public License (GNU 宽通用公共许可证)的缩�
 + 7-Zip
 + FFmpeg
 
-## 4、Apache
+## 四、Apache
 Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议和BSD类似，同样鼓励代码共享和尊重原作者的著作权，同样允许代码修改，再发布（作为开源或商业软件）。需要满足的条件也和BSD类似：
 
 需要给代码的用户一份Apache Licence如果你修改了代码，需要在被修改的文件中说明。在延伸的代码中（修改和有源代码衍生的代码中）需要带有原来代码中的协议，商标，专利声明和其他原来作者规定需要包含的说明。如果再发布的产品中包含一个Notice文件，则在Notice文件中需要带有Apache Licence。你可以在Notice中增加自己的许可，但不可以表现为对Apache Licence构成更改。Apache Licence也是对商业应用友好的许可。使用者也可以在需要的时候修改代码来满足需要并作为开源或商业产品发布/销售。
@@ -77,7 +77,7 @@ Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议
 + Tomcat
 + Subversion
 
-## 5、BSD2
+## 五、BSD2
 
 ### 使用
 修改版本必须保持其原始版权声明。
@@ -85,7 +85,7 @@ Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议
 ### 商业软件
 商业软件可以使用，也可以修改使用BSD2协议的代码。
 
-## 6、BSD3
+## 六、BSD3
 
 ### 使用
 修改版本必须保持其原始版权声明。未经许可不得使用原作者或公司的名字做宣传。
@@ -93,7 +93,7 @@ Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议
 ### 商业软件
 商业软件可以使用，也可以修改使用BSD3协议的代码。
 
-## 7、MIT
+## 七、MIT
 
 ### 使用
 修改版本必须保持其原始版权声明。
@@ -101,7 +101,7 @@ Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议
 ### 商业软件
 商业软件可以使用，也可以修改使用MIT协议的代码。
 
-## 8、MIT
+## 八、MIT
 
 ### 使用
 修改版本必须保持其原始版权声明。如果发布了编译后的可执行文件，那么必须让对方可以取得MPL协议下程序的源码。
@@ -109,7 +109,7 @@ Apache Licence是著名的非盈利开源组织Apache采用的协议。该协议
 ### 商业软件
 商业软件可以使用，也可以修改MPL协议的代码，但修改后的代码版权归软件的发起者。
 
-## 9、常见c++开源类库
+## 九、常见c++开源类库
 | 库 | 协议 | 商业软件是否可以使用 |
 |----|-----|--------------------|
 |boost|boost许可协议|可以使用|

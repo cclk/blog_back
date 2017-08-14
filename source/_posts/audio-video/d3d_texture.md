@@ -13,7 +13,7 @@ tags:
 ## 背景
 Direct3d纹理渲染播放视频c++类
 
-## 头文件（D3DTexture.h）
+## 头文件（D3DTextureImpl.h）
 
 <!--more-->
 
@@ -25,27 +25,31 @@ Direct3d纹理渲染播放视频c++类
 #include <windows.h>
 #include <d3d9.h>
 
-class D3DTexture
+class D3DTextureImpl
 {
 public:
-	D3DTexture();
-	~D3DTexture();
+	D3DTextureImpl();
+	~D3DTextureImpl();
 
 public:
-	bool Create(HWND hWnd, size_t width, size_t height);
+	bool Create(HWND hWnd, size_t rgbWidth, size_t rgbHeight);
 	void Destroy();
 
-	bool RenderBGRA(uint8_t *rgb, uint32_t width, uint32_t height);
+	bool RenderBGRA(uint8_t *rgb, uint32_t rgbWidth, uint32_t rgbHeight);
 
 private:
-	void ResizeTexture(size_t width, size_t height);
+	bool ResizeTexture(uint32_t rgbWidth, uint32_t rgbHeight);
 	void SetSamplerState();
-	bool TestCooperativeLevel();
+	bool TestCooperativeLevel(uint32_t rgbWidth, uint32_t rgbHeight);
+	bool IsNeedReCreate(size_t rgbWidth, size_t rgbHeight);
 
 private:
 	HWND m_hWnd;
-	size_t m_width;
-	size_t m_height;
+	size_t m_rgbWidth;
+	size_t m_rgbHeight;
+
+	size_t m_wndWidth;
+	size_t m_wndHeight;
 
 	IDirect3D9 *m_d3d;
 	IDirect3DDevice9 *m_d3dDevice;
@@ -56,10 +60,11 @@ private:
 #endif // d3d_render_h__
 ```
 
-## 源文件（D3DTexture.cpp）
+## 源文件（D3DTextureImpl.cpp）
 
 ``` cpp
-#include "D3DTexture.h"
+#include "D3DTextureImpl.h"
+#include <glog/logger.h>
 
 #define D3DFVF_CUSTOMVERTEX (D3DFVF_XYZ|D3DFVF_TEX1)
 
@@ -68,23 +73,25 @@ struct D3dCustomVertex {
 	float u, v;
 };
 
-D3DTexture::D3DTexture()
+D3DTextureImpl::D3DTextureImpl()
 	: m_hWnd(NULL)
-	, m_width(0)
-	, m_height(0)
+	, m_rgbWidth(0)
+	, m_rgbHeight(0)
+	, m_wndWidth(0)
+	, m_wndHeight(0)
 	, m_d3d(NULL)
 	, m_d3dDevice(NULL)
 	, m_d3dVertexBuffer(NULL)
 	, m_d3dTexture(NULL)
 {
-
 }
 
-D3DTexture::~D3DTexture()
+D3DTextureImpl::~D3DTextureImpl()
 {
+	Destroy();
 }
 
-bool D3DTexture::Create(HWND hWnd, size_t width, size_t height)
+bool D3DTextureImpl::Create(HWND hWnd, size_t rgbWidth, size_t rgbHeight)
 {
 	do
 	{
@@ -92,7 +99,7 @@ bool D3DTexture::Create(HWND hWnd, size_t width, size_t height)
 
 		if (NULL == hWnd)
 		{
-			std::cout << "hWnd is null";
+			LOG_INFO << "hWnd is null";
 			break;
 		}
 		else
@@ -103,7 +110,7 @@ bool D3DTexture::Create(HWND hWnd, size_t width, size_t height)
 		m_d3d = Direct3DCreate9(D3D_SDK_VERSION);
 		if (nullptr == m_d3d)
 		{
-			std::cout << "Direct3DCreate9 faild";
+			LOG_DEBUG << "Direct3DCreate9 faild";
 			break;
 		}
 
@@ -112,29 +119,52 @@ bool D3DTexture::Create(HWND hWnd, size_t width, size_t height)
 		d3d_params.SwapEffect = D3DSWAPEFFECT_COPY;
 
 		IDirect3DDevice9* d3d_device = NULL;
-		HRESULT hRet = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, m_hWnd,
-			D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED, &d3d_params, &d3d_device);
+		HRESULT hRet = m_d3d->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
+										   m_hWnd,
+										   D3DCREATE_SOFTWARE_VERTEXPROCESSING | D3DCREATE_MULTITHREADED,
+										   &d3d_params,
+										   &d3d_device);
 		if (D3D_OK != hRet)
 		{
-			std::cout << "CreateDevice faild:" << hRet;
+			LOG_DEBUG << "CreateDevice faild:" << hRet;
 			break;
 		}
 		m_d3dDevice = d3d_device;
 
 		IDirect3DVertexBuffer9* vertex_buffer = NULL;
 		const int kRectVertices = 4;
-		hRet = m_d3dDevice->CreateVertexBuffer(kRectVertices * sizeof(D3dCustomVertex), 0, D3DFVF_CUSTOMVERTEX, D3DPOOL_MANAGED, &vertex_buffer, NULL);
+		hRet = m_d3dDevice->CreateVertexBuffer(kRectVertices * sizeof(D3dCustomVertex),
+											   0,
+											   D3DFVF_CUSTOMVERTEX,
+											   D3DPOOL_MANAGED,
+											   &vertex_buffer,
+											   NULL);
 		if (D3D_OK != hRet)
 		{
-			std::cout << "CreateVertexBuffer faild:" << hRet;
+			LOG_DEBUG << "CreateVertexBuffer faild:" << hRet;
 			break;
 		}
 		m_d3dVertexBuffer = vertex_buffer;
 
-		ResizeTexture(width, height);
+		if (!ResizeTexture(rgbWidth, rgbHeight))
+		{
+			LOG_DEBUG << "ResizeTexture faild";
+			break;
+		}
 
 		m_d3dDevice->Present(NULL, NULL, NULL, NULL);
 
+		RECT rtWnd;
+		::GetClientRect(m_hWnd, &rtWnd);
+		size_t wndWidth = abs(rtWnd.right - rtWnd.left);
+		size_t wndHeight = abs(rtWnd.bottom - rtWnd.top);
+
+		m_rgbWidth = rgbWidth;
+		m_rgbHeight = rgbHeight;
+		m_wndWidth = wndWidth;
+		m_wndHeight = wndHeight;
+
+		LOG_INFO << "D3DTexture Create success";
 		return true;
 	} while (0);
 
@@ -142,7 +172,7 @@ bool D3DTexture::Create(HWND hWnd, size_t width, size_t height)
 	return false;
 }
 
-void D3DTexture::Destroy()
+void D3DTextureImpl::Destroy()
 {
 	if (m_d3dTexture)
 	{
@@ -169,30 +199,38 @@ void D3DTexture::Destroy()
 	}
 }
 
-bool D3DTexture::RenderBGRA(uint8_t *rgb, uint32_t width, uint32_t height)
+bool D3DTextureImpl::RenderBGRA(uint8_t *rgb, uint32_t rgbWidth, uint32_t rgbHeight)
 {
-	if (width != m_width || height != m_height)
+	if (IsNeedReCreate(rgbWidth, rgbHeight))
 	{
-		ResizeTexture(width, height);
+		if (!Create(m_hWnd, rgbWidth, rgbHeight))
+		{
+			LOG_INFO << "Create faild";
+			return false;
+		}
 	}
 
-	TestCooperativeLevel();
+	if (!TestCooperativeLevel(rgbWidth, rgbHeight))
+	{
+		LOG_INFO << "TestCooperativeLevel faild";
+		return false;
+	}
 
 	D3DLOCKED_RECT lock_rect;
 	HRESULT hr = m_d3dTexture->LockRect(0, &lock_rect, NULL, 0);
 	if (hr != D3D_OK)
 	{
-		std::cout << "LockRect faild:" << hr;
+		LOG_INFO << "LockRect faild:" << hr;
 		return false;
 	}
 
-	///to do copy
+	//to do copy
 	char * pDest = reinterpret_cast<char*>(lock_rect.pBits);
 	const char * pSrc = reinterpret_cast<const char*>(rgb);
 	int stride = lock_rect.Pitch;
-	int pixel_w_size = width * 32 / 8;
+	int pixel_w_size = rgbWidth * 32 / 8;
 
-	for (int i = 0; i < height; i++)
+	for (uint32_t i = 0; i < rgbHeight; i++)
 	{
 		memcpy(pDest, pSrc, pixel_w_size);
 		pDest += stride;
@@ -214,7 +252,7 @@ bool D3DTexture::RenderBGRA(uint8_t *rgb, uint32_t width, uint32_t height)
 	return true;
 }
 
-void D3DTexture::ResizeTexture(size_t width, size_t height)
+bool D3DTextureImpl::ResizeTexture(size_t rgbWidth, size_t rgbHeight)
 {
 	if (m_d3dTexture)
 	{
@@ -222,22 +260,29 @@ void D3DTexture::ResizeTexture(size_t width, size_t height)
 		m_d3dTexture = NULL;
 	}
 
-	m_width = width;
-	m_height = height;
 	IDirect3DTexture9* texture = NULL;
 
-	m_d3dDevice->CreateTexture(static_cast<UINT>(m_width),
-		static_cast<UINT>(m_height),
-		1,
-		0,
-		D3DFMT_A8R8G8B8,
-		D3DPOOL_MANAGED,
-		&texture,
-		NULL);
-	m_d3dTexture = texture;
+	m_d3dDevice->CreateTexture(static_cast<UINT>(rgbWidth),
+							   static_cast<UINT>(rgbHeight),
+							   1,
+							   0,
+							   D3DFMT_A8R8G8B8,
+							   D3DPOOL_MANAGED,
+							   &texture,
+							   NULL);
+	if (nullptr == texture)
+	{
+		LOG_INFO << "CreateTexture texture is null";
+		return false;
+	}
+	else
+	{
+		m_d3dTexture = texture;
+	}
 
 	// Vertices for the video frame to be rendered to.
-	static const D3dCustomVertex rect[] = {
+	static const D3dCustomVertex rect[] =
+	{
 		{ -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
 		{ -1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 		{ 1.0f, -1.0f, 0.0f, 1.0f, 1.0f },
@@ -245,18 +290,22 @@ void D3DTexture::ResizeTexture(size_t width, size_t height)
 	};
 
 	void* buf_data;
-	if (m_d3dVertexBuffer->Lock(0, 0, &buf_data, 0) != D3D_OK)
+	HRESULT hr = m_d3dVertexBuffer->Lock(0, 0, &buf_data, 0);
+	if (hr != D3D_OK)
 	{
-		return;
+		LOG_INFO << "m_d3dVertexBuffer Lock faild:" << hr;
+		return false;
 	}
 
 	memcpy(buf_data, &rect, sizeof(rect));
 	m_d3dVertexBuffer->Unlock();
 
 	SetSamplerState();
+
+	return true;
 }
 
-void D3DTexture::SetSamplerState()
+void D3DTextureImpl::SetSamplerState()
 {
 	IDirect3DDevice9_SetVertexShader(m_d3dDevice, NULL);
 	IDirect3DDevice9_SetFVF(m_d3dDevice, D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1);
@@ -315,7 +364,7 @@ void D3DTexture::SetSamplerState()
 	m_d3dDevice->SetSamplerState(SamplerIdx, D3DSAMP_MAXANISOTROPY, 4);// 最大异性采样阈值设置为4
 }
 
-bool D3DTexture::TestCooperativeLevel()
+bool D3DTextureImpl::TestCooperativeLevel(uint32_t rgbWidth, uint32_t rgbHeight)
 {
 	if (NULL == m_d3dDevice)
 	{
@@ -330,7 +379,9 @@ bool D3DTexture::TestCooperativeLevel()
 		return false;
 
 	case D3DERR_DEVICENOTRESET://设备可以恢复
-		return Create(m_hWnd, m_width, m_height);
+		m_wndHeight = 0;
+		m_wndWidth = 0;
+		return Create(m_hWnd, rgbWidth, rgbHeight);
 
 	case  D3D_OK:
 		break;
@@ -338,6 +389,31 @@ bool D3DTexture::TestCooperativeLevel()
 	default:
 		return false;
 	}
+
+	return true;
+}
+
+bool D3DTextureImpl::IsNeedReCreate(size_t rgbWidth, size_t rgbHeight)
+{
+	RECT rtWnd;
+	::GetClientRect(m_hWnd, &rtWnd);
+	size_t wndWidth = abs(rtWnd.right - rtWnd.left);
+	size_t wndHeight = abs(rtWnd.bottom - rtWnd.top);
+
+	if ((m_rgbWidth == rgbWidth)
+		&& (m_rgbHeight == rgbHeight)
+		&& (m_wndWidth == wndWidth)
+		&& (m_wndHeight == wndHeight)
+		&& (nullptr != m_d3d)
+		&& (nullptr != m_d3dDevice))
+	{
+		return false;
+	}
+
+	m_rgbWidth = rgbWidth;
+	m_rgbHeight = rgbHeight;
+	m_wndWidth = wndWidth;
+	m_wndHeight = wndHeight;
 
 	return true;
 }

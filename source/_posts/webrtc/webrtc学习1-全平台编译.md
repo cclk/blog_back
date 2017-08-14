@@ -9,11 +9,11 @@ tags:
      - webrtc
 ---
 
-## 0、前提
+## 一、前提
 因为webrtc很多依赖源是在墙外，需要翻墙工具。
 
 
-## 1、安装depot tools
+## 二、安装depot tools
 是一套脚本，用于管理代码签出和审查。
 
 参考[Install depot_tools](http://dev.chromium.org/developers/how-tos/install-depot-tools)
@@ -28,7 +28,7 @@ tags:
 
 <!--more-->
 
-## 2、安装依赖软件
+## 三、安装依赖软件
 
 ### Windows
 + 安装”Visual Studio 2015 Update 3“，其他版本都不受官方支持。
@@ -56,7 +56,7 @@ $ sudo update-alternatives --config jarsigner
 ### Mac（IOS）
 + 安装最新XCode
 
-## 3、同步源码
+## 四、同步源码
 参考[Native Code Development](https://webrtc.org/native-code/development/)
 
 先创建源码目录
@@ -105,7 +105,7 @@ fetch --nohooks webrtc_ios
 gclient sync
 ```
 
-## 4、Working with Release Branches
+## 五、Working with Release Branches
 To see available release branches, run:
 ``` bash
 git branch -r
@@ -132,7 +132,7 @@ git checkout -b my_branch refs/remotes/branch-heads/43
 gclient sync
 ```
 
-## 5、编译
+## 六、编译
 
 ### 生成ninjia项目
 
@@ -182,7 +182,7 @@ gn gen out/Debug-sim64 --args='target_os="ios" target_cpu="x64" is_component_bui
 ninja -C out/Default
 ```
 
-## 6、备注
+## 七、备注
 ### windows编译脚本备份
 ``` bash
 set DEPOT_TOOLS_WIN_TOOLCHAIN=0
