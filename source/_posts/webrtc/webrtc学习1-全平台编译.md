@@ -250,7 +250,8 @@ set HTTPS_PROXY=https://127.0.0.1:1080
 git config --global --unset http.proxy
 git config --global --unset https.proxy
 
-netsh winhttp set proxy reset
+netsh winhttp reset proxy
+netsh winhttp show proxy
 
 set HTTP_PROXY=
 set HTTPS_PROXY=
