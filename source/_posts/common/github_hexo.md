@@ -72,7 +72,7 @@ timezone: Asia/Shanghai
 
 #### 配置统一资源定位符（个人域名）
 ```
-url: http://arya.cn
+url: http://cclk.cc
 ```
 
 #### 部署配置
