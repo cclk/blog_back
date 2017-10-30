@@ -4,7 +4,8 @@ date: 2017-10-30 15:19:32
 categories:
 reward: false
 tags:
-     - blog vscode
+     - blog
+     - vscode
 ---
 
 ## Syncing
