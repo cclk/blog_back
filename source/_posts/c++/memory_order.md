@@ -8,7 +8,7 @@ tags:
      - c++
 ---
 
-## 背景
+## 一、背景
 先看一段c++单例常见代码：
 ``` cpp
 Singleton* Singleton::instance() 
@@ -32,11 +32,11 @@ Singleton* Singleton::instance()
 
 其实上述设计方式使用到了双重检查锁定模式（DCLP），下面介绍下什么是DCLP。
 
-**双重检查锁定模式（DCLP）**：DCLP的关键之处在于我们观察到的这一现象：调用者在调用instance()时，pInstance在大部分时候都是非空的，因此没必要再次初始化。所以，DCLP在加锁之前先做了一次pInstance是否为空的检查。只有判断结果为真（即pInstance还未初始化），加锁操作才会进行，然后再次检查pInstance是否为空（这就是该模式被命名为双重检查的原因）。第二次检查是必不可少的，因为，正如我们之前的分析，在第一次检验pInstance和加锁之间，可能有另一个线程对pInstance进行初始化。
+**双重检查锁定模式（DCLP）**：DCLP(double-checked locking pattern)的关键之处在于我们观察到的这一现象：调用者在调用instance()时，pInstance在大部分时候都是非空的，因此没必要再次初始化。所以，DCLP在加锁之前先做了一次pInstance是否为空的检查。只有判断结果为真（即pInstance还未初始化），加锁操作才会进行，然后再次检查pInstance是否为空（这就是该模式被命名为双重检查的原因）。第二次检查是必不可少的，因为，正如我们之前的分析，在第一次检验pInstance和加锁之间，可能有另一个线程对pInstance进行初始化。
 
 DCLP前提：`DCLP的执行过程中必须确保机器指令是按一个可接受的顺序执行的。`
 
-## DCLP与指令执行顺序
+## 二、DCLP与指令执行顺序
 思考一下初始化pInstance的这行代码:
 ``` cpp
 pInstance = new Singleton;
@@ -87,7 +87,7 @@ Singleton* Singleton::instance()
 
 因为c++编译器在编译过程中会对代码进行优化，所以实际的代码执行顺序可能被打乱，另外因为CPU有一级二级缓存(cache)，CPU的计算结果并不是及时更新到内存的，所以在多线程环境，不同线程间共享内存数据存在可见性问题，从而导致使用DCLP也存在风险。
 
-## 内存栅栏技术
+## 三、内存栅栏技术
 我们知道的双重检查锁定模式存在风险，那么有没有办法改进呢？ 办法是有，这就是内存栅栏技术(memory fence),也称内存栅障(memory barrier) 。
 
 内存栅栏的作用在于保证内存操作的相对顺序， 但并不保证内存操作的严格时序， 确保第一个线程更新的数据对其他线程可见。 一个 memory fence之前的内存访问操作必定先于其之后的完成。
@@ -121,7 +121,7 @@ Singleton* Singleton::instance()
 
 这里，我们可以看到：在m\_instance指针为NULL时，我们做了一次锁定，这个锁定确保创建该对象的线程对m\_instance 的操作对其他线程可见。在创建线程内部构造块中，m_instance被再一次检查，以确保该线程仅创建了一份对象副本。
 
-## atomic
+## 四、atomic
 上节的代码使用内存栅栏锁定技术可以很方便地实现双重检查锁定。但是看着实在有点麻烦，在C++11中更好的实现方式是直接使用原子操作。
 
 ``` cpp
@@ -176,7 +176,7 @@ Singleton* Singleton::getInstance()
 }
 ```
 
-## call_once
+## 五、call_once
 call_one保证函数fn只被执行一次，如果有多个线程同时执行函数fn调用，则只有一个活动线程(active call)会执行函数，其他的线程在这个线程执行返回之前会处于”passive execution”(被动执行状态)—不会直接返回，直到活动线程对fn调用结束才返回。对于所有调用函数fn的并发线程的数据可见性都是同步的(一致的)。 
 
 如果活动线程在执行fn时抛出异常，则会从处于”passive execution”状态的线程中挑一个线程成为活动线程继续执行fn,依此类推。 
@@ -196,7 +196,7 @@ Singleton* Singleton::instance()
 }
 ```
 
-## 多线程与static
+## 六、多线程与static
 可以看出上面的代码相比较之前的示例代码来说已经相当的简洁了，但是在C++memory model中对static local variable，说道：The initialization of such a variable is defined to occur the first time control passes through its declaration; for multiple threads calling the function, this means there’s the potential for a race condition to define first.
 
 因此，我们将会得到一份最简洁也是效率最高的单例模式的C++11实现：
@@ -210,7 +210,7 @@ Singleton& Singleton::instance()
 }
 ```
 
-## 日常应用中可能会踩的坑
+## 七、日常应用中可能会踩的坑
 
 线程A代码：
 ``` cpp
@@ -218,6 +218,8 @@ int flag = 0;
 int params = 0;
 params = 1;
 flag = 1;
+
+//start thread B;
 ```
 
 有线程B引用线程A中的数据：
@@ -225,13 +227,22 @@ flag = 1;
 if(1 == flag)
 {
     //using params;
-    ....
 }
 ```
 由于编译器会进行优化，不能确保params = 1的赋值操作在flag = 1之前进行。
 
+优化方案：
+``` cpp
+if (flag && params)  //using flag and params
+{
+    //start thread B
+}
+```
 
-## 参考
+## 八、参考
+
+[double-checked-locking-is-fixed-in-cpp11](http://preshing.com/20130930/double-checked-locking-is-fixed-in-cpp11/)
+
 [当我们在谈论 memory order 的时候，我们在谈论什么](https://cloud.tencent.com/community/article/163162)
 
 [C++和双重检查锁定模式(DCLP)的风险](http://blog.jobbole.com/86392/)
