@@ -10,7 +10,7 @@ tags:
 ---
 
 ## 背景
-具体内容来自<<Go web编程>>[链接](https://github.com/astaxie/build-web-application-with-golang/)
+具体内容来自\<\<Go web编程\>\>[链接](https://github.com/astaxie/build-web-application-with-golang/)
 
 ## Go语言基础
 Go是一门类似C的编译型语言，但是它的编译速度非常快。这门语言的关键字总共也就二十五个，比英文字母还少一个，这对于我们的学习来说就简单了很多。先让我们看一眼这些关键字都长什么样：
