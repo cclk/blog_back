@@ -25,8 +25,6 @@ c++11加入了线程库std::thread，很好的解决了c++跨平台创建线程�
 根据c++11的新特性，包括std::thread、std::function、std::mutex、std::condition_variable、std::atomic、std::packaged_task、std::future等，可以实现如下一个符合要求的线程池，基本满足日常要求。
 
 ``` cpp
-#pragma once
-
 #include <functional>
 #include <thread>
 #include <condition_variable>
@@ -35,12 +33,7 @@ c++11加入了线程库std::thread，很好的解决了c++跨平台创建线程�
 #include <queue>
 #include <vector>
 
-namespace cclk
-{
-    class threadpool;
-}
-
-class cclk::threadpool
+class threadpool
 {
     using Task = std::function<void()>;
 
@@ -170,7 +163,7 @@ public:
 
 int main(int argc, char *argv[])
 {
-    cclk::threadpool executor(10);
+    threadpool executor(10);
 
     std::future<void> ret_func1 = executor.commit(func1);
     std::future<int> ret_struct1 = executor.commit(struct1{});

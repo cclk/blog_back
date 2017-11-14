@@ -87,7 +87,7 @@ public:
 
 private:
     sdkimpl *_impl;
-    cclk::threadpool _pool;
+    threadpool _pool;
 };
 ```
 
