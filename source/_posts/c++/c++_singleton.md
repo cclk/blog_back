@@ -11,6 +11,16 @@ tags:
 ## 背景
 c++平时在开发过程中，需要用到单例模式比较多，如果每个都需要去实现，比较麻烦，可实现一个通用的单例模版类。
 
+**PS**：可以使用C++11的static快速实现单例（static在C++11里面规定是线程安全的），如：
+
+``` cpp
+MyClass & Instance()
+{
+	static MyClass my;
+	return my;
+}
+```
+
 ## 实现
 
 <!--more-->
