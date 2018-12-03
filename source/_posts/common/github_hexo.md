@@ -131,3 +131,11 @@ git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
 
 ### npm速度慢的问题
 可以使用国内的npm镜像，如[淘宝npm](https://npm.taobao.org/)
+
+### hexo支持流程图
+
+``` bash
+cd blog
+yarn add hexo-filter-mermaid-diagrams
+```
+具体见：[hexo-filter-mermaid-diagrams](https://github.com/webappdevelp/hexo-filter-mermaid-diagrams)
